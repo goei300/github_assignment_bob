@@ -10,27 +10,28 @@ jobs:
         python-version: ["3.8", "3.9", "3.10"]
 
     steps:
-      - name: Checkout code
+      - name: Step 1 - Code Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Step 2 - Python Setup
         run: |
           python -m venv venv_${{ matrix.python-version }}
           source venv_${{ matrix.python-version }}/bin/activate
           python -m pip install --upgrade pip
 
-      - name: Display Python version
+      - name: Step 3 - Print Python Version
         run: |
           source venv_${{ matrix.python-version }}/bin/activate
           python -c "import sys; print(sys.version)"
 
-      - name: Create version artifact
+      - name: Step 4 - Create Version Artifact
         run: |
           echo ${{ matrix.python-version }} > version.txt
           echo "::set-output name=version::$(cat version.txt)"
 
-      - name: Upload artifact
+      - name: Step 5 - Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: python-versions
+          name: Python Versions Artifact
           path: version.txt
+
