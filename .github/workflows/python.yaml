@@ -1,33 +1,35 @@
-name: Python
+name: Python Version Check
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
+  check_python_version:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10"]
 
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-          
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
-        
-      - name: Create version artifact
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          python -m pip install --upgrade pip
+
+      - name: Print Python Versions
+        run: |
+          source venv/bin/activate
+          python -c "import sys; print(sys.version)"
+
+      - name: Create Version Text File
         run: |
           echo ${{ matrix.python-version }} > version.txt
-          echo "::set-output name=version::$(cat version.txt)"
-        id: version
-        
-      - name: Upload artifact
+
+      - name: Upload Version Text File
         uses: actions/upload-artifact@v2
         with:
-          name: python-versions
+          name: Python Versions
           path: version.txt
