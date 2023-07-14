@@ -28,7 +28,7 @@ jobs:
         run: |
           echo ${{ matrix.python-version }} > python-version.txt
           echo "::set-output name=version::$(cat python-version.txt)"
-        id : version
+        id : python-version
         
       - name: Step 5 - Save Artifact
         uses: actions/upload-artifact@v2
