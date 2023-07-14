@@ -13,25 +13,25 @@ jobs:
       - name: Step 1 - Code Checkout
         uses: actions/checkout@v3
 
-      - name: Step 2 - Python Setup
+      - name: Step 2 - Set up Python ${{ matrix.python-version }}
         run: |
           python -m venv venv_${{ matrix.python-version }}
           source venv_${{ matrix.python-version }}/bin/activate
           python -m pip install --upgrade pip
 
-      - name: Step 3 - Print Python Version
+      - name: Step 3 - Display Python Version
         run: |
           source venv_${{ matrix.python-version }}/bin/activate
           python -c "import sys; print(sys.version)"
 
-      - name: Step 4 - Create Version Artifact
+      - name: Step 4 - Create Artifact
         run: |
-          echo ${{ matrix.python-version }} > version.txt
-          echo "::set-output name=version::$(cat version.txt)"
+          echo ${{ matrix.python-version }} > python-version.txt
+          echo "::set-output name=version::$(cat python-version.txt)"
 
-      - name: Step 5 - Upload Artifact
+      - name: Step 5 - Save Artifact
         uses: actions/upload-artifact@v2
         with:
           name: Python Versions Artifact
-          path: version.txt
+          path: python-version.txt
 
